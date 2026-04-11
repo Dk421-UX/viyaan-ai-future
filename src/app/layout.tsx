@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import './globals.css'
 
 // ✅ Vercel Analytics
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
   title: 'Viyaan Future',
