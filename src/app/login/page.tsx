@@ -82,6 +82,8 @@ export default function LoginPage() {
           {/* Email */}
           <input
             type="email"
+            name="email"
+            autoComplete="email"
             placeholder="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
@@ -93,6 +95,8 @@ export default function LoginPage() {
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
+              name="password"
+              autoComplete="current-password"
               placeholder="Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
@@ -125,6 +129,12 @@ export default function LoginPage() {
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
+
+          {/* ✅ NEW: Password Save Hint */}
+          <p className="text-center text-white/30 text-[11px] mt-3 leading-relaxed">
+            Tip: Save your password in Google Password Manager for easy login next time.
+          </p>
+
         </form>
 
         {/* Footer */}
