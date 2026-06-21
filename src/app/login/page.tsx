@@ -1,57 +1,21 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-
-    try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'login', email, password }),
-      })
-
-      const data = await res.json()
-
-      if (!data.success) {
-        setError(data.error)
-        return
-      }
-
-      router.push('/dashboard')
-    } catch {
-      setError('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+  function handleGoogleLogin() {
+    window.location.href = '/api/auth/google/redirect'
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-[#080808] text-white relative overflow-hidden">
-
       {/* 🔮 Background Glow */}
       <div className="absolute w-[600px] h-[600px] bg-purple-500/10 blur-3xl rounded-full top-[-150px] left-1/2 -translate-x-1/2 animate-pulse" />
       <div className="absolute w-[400px] h-[400px] bg-indigo-500/10 blur-3xl rounded-full bottom-[-100px] right-[-100px]" />
 
-      <div className="w-full max-w-sm relative z-10">
-
+      <div className="w-full max-w-sm relative z-10 text-center">
         {/* Header */}
-        <div className="mb-12 text-center animate-fadeUp">
-
+        <div className="mb-12 animate-fadeUp">
           {/* Logo */}
           <div className="flex justify-center mb-5">
             <Image
@@ -63,86 +27,34 @@ export default function LoginPage() {
             />
           </div>
 
-          <p className="text-[10px] tracking-[0.3em] text-white/40 uppercase mb-3">
-            VIYAAN FUTURE
-          </p>
-
-          <h1 className="text-3xl font-medium mb-2">
-            Welcome back.
+          <h1 className="text-3xl font-light mb-2">
+            Welcome Back
           </h1>
 
           <p className="text-white/50 text-sm">
-            Continue your reflection journey.
+            Meet Your Future Self
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4 animate-fadeUp">
-
-          {/* Email */}
-          <input
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder="Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm placeholder:text-white/40 focus:border-purple-400 focus:outline-none transition backdrop-blur focus:shadow-[0_0_0_2px_rgba(139,92,246,0.2)]"
-          />
-
-          {/* Password */}
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              autoComplete="current-password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm placeholder:text-white/40 focus:border-purple-400 focus:outline-none transition backdrop-blur focus:shadow-[0_0_0_2px_rgba(139,92,246,0.2)]"
-            />
-
-            {/* 👁 Toggle */}
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-white/40 hover:text-white transition"
-            >
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
-          </div>
-
-          {/* Error */}
-          {error && (
-            <p className="text-red-400 text-xs text-center">
-              {error}
-            </p>
-          )}
-
-          {/* Button */}
+        {/* Action Button */}
+        <div className="space-y-4 animate-fadeUp">
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl text-sm font-medium bg-gradient-to-r from-purple-500 to-violet-600 hover:scale-[1.01] hover:opacity-90 transition disabled:opacity-50 shadow-lg shadow-purple-500/20"
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full py-3.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-accent hover:text-black hover:scale-[1.01] transition shadow-lg shadow-white/5 flex items-center justify-center gap-3 active:scale-[0.99]"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {/* Google Icon Representation */}
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.24 10.285V13.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.859-3.578-7.859-8s3.529-8 7.859-8c2.46 0 4.105 1.025 5.047 1.926l2.427-2.334C17.955 2.192 15.34 1 12.24 1 6.033 1 1 6.033 1 12.24s5.033 11.24 11.24 11.24c6.478 0 10.793-4.537 10.793-10.986 0-.746-.08-1.32-.176-1.887l-10.617-.322z" />
+            </svg>
+            Continue with Google
           </button>
+        </div>
 
-          {/* ✅ NEW: Password Save Hint */}
-          <p className="text-center text-white/30 text-[11px] mt-3 leading-relaxed">
-            Tip: Save your password in Google Password Manager for easy login next time.
-          </p>
-
-        </form>
-
-        {/* Footer */}
-        <p className="text-center text-white/40 text-xs mt-8">
-          No account?{' '}
-          <Link href="/signup" className="text-purple-300 hover:text-purple-200 transition">
-            Create one
-          </Link>
+        {/* Footer Supporting Copy */}
+        <p className="text-center text-white/30 text-[10px] mt-8 leading-relaxed">
+          Private by design.<br />
+          Your reflections stay connected to your account.
         </p>
       </div>
 
