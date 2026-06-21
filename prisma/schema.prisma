@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid())
-  email     String  @unique
-  password  String
-  createdAt DateTime @default(now())
-  entries   Entry[]
+  id           String               @id @default(uuid())
+  email        String               @unique
+  password     String?
+  createdAt    DateTime             @default(now())
+  entries      Entry[]
 }
 
 model Entry {
@@ -24,5 +24,25 @@ model Entry {
   intensityAfter  Int?
   createdAt       DateTime @default(now())
 
+  // V2 Analytics & Engine Fields
+  persona          String?
+  primaryEmotion   String?
+  secondaryEmotion String?
+  detectedFear     String?
+  thinkingPattern  String?
+  growthDirection  String?
+  nextStep         String?
+  confidenceLevel  Int?
+  fearLevel        Int?
+  stressLevel      Int?
+  hopeLevel        Int?
+  goalsStruggles   String?
+
   user User @relation(fields: [userId], references: [id])
+}
+
+model playing_with_neon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value Float? @db.Real
 }

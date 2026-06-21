@@ -8,16 +8,24 @@ export default async function DashboardPage() {
 
   if (!session) redirect('/login')
 
-  const entries = await prisma.entry.findMany({
-    where: { userId: session.userId },
-    orderBy: { createdAt: 'desc' },
-  })
+  let serialized: any[] = []
+  let dbError: string | null = null
 
-  const serialized = entries.map(e => ({
-    ...e,
-    createdAt: e.createdAt.toISOString(),
-    intensityAfter: e.intensityAfter ?? null,
-  }))
+  try {
+    const entries = await prisma.entry.findMany({
+      where: { userId: session.userId },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    serialized = entries.map(e => ({
+      ...e,
+      createdAt: e.createdAt.toISOString(),
+      intensityAfter: e.intensityAfter ?? null,
+    }))
+  } catch (error) {
+    console.error('Error fetching entries in DashboardPage:', error)
+    dbError = 'Unable to load entries. Please try again.'
+  }
 
   return (
     <div
@@ -61,6 +69,7 @@ export default async function DashboardPage() {
         <DashboardClient
           entries={serialized}
           email={session.email}
+          dbError={dbError}
         />
       </div>
     </div>
